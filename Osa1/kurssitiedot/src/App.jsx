@@ -9,7 +9,7 @@ const Part = (props) => {
     </p>
   )
 }
-
+ 
 const Content = (props) => {
   return (
     <div>
