@@ -56,13 +56,18 @@ const App = () => {
             setNewNumber('')
             notify(`Updated number of ${returnedPerson.name}`)
           })
-          .catch(() => {
-
-            notify(
-              `Information of ${existing.name} has already been removed from server`,
-              'error'
-            )
-            setPersons(persons.filter(p => p.id !== existing.id))
+          .catch(error => {
+            if (error.response && error.response.status === 404) {
+              notify(
+                `Information of ${existing.name} has already been removed from server`,
+                'error'
+              )
+              setPersons(persons.filter(p => p.id !== existing.id))
+            } else if (error.response) {
+              notify(error.response.data.error, 'error')
+            } else {
+              notify('Could not connect to server', 'error')
+            }
           })
       }
       return
@@ -75,6 +80,14 @@ const App = () => {
         setNewName('')
         setNewNumber('')
         notify(`Added ${returnedPerson.name}`)
+      })
+      .catch(error => {
+        if (error.response) {
+          console.log(error.response.data)
+          notify(error.response.data.error, 'error')
+        } else {
+          notify('Could not connect to server', 'error')
+        }
       })
   }
 
